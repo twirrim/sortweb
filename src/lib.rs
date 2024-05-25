@@ -1,8 +1,8 @@
 #![warn(clippy::all, rust_2018_idioms)]
 mod app;
-mod shaker;
 mod bubble;
 mod insertion;
+mod shaker;
 
 pub use app::SortApp;
 pub use bubble::BubbleSort;
