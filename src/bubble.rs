@@ -21,6 +21,10 @@ impl BubbleSort {
         sort
     }
 
+    pub fn finished(&self) -> bool {
+        self.finished
+    }
+
     pub fn step(&mut self) {
         // End conditions
         if self.finished {

@@ -1,6 +1,7 @@
 use crate::bubble::BubbleSort;
 use crate::insertion::InsertionSort;
 use crate::make_bar_vec;
+use crate::shaker::ShakerSort;
 
 use egui::Vec2;
 
@@ -11,14 +12,17 @@ pub struct SortApp {
     #[serde(skip)]
     bubble_sort: BubbleSort,
     #[serde(skip)]
+    shaker_sort: ShakerSort,
+    #[serde(skip)]
     insertion_sort: InsertionSort,
 }
 
 impl Default for SortApp {
     fn default() -> Self {
-        let starting_data = make_bar_vec(250);
+        let starting_data = make_bar_vec(150);
         Self {
             bubble_sort: BubbleSort::new(starting_data.clone()),
+            shaker_sort: ShakerSort::new(starting_data.clone()),
             insertion_sort: InsertionSort::new(starting_data.clone()),
         }
     }
@@ -85,19 +89,33 @@ impl eframe::App for SortApp {
                 ui.allocate_space(Vec2::new(0.0, 250.0));
                 self.bubble_sort.step();
                 self.bubble_sort.plot_chart(ui);
+                if !self.bubble_sort.finished() {
+                    ui.ctx().request_repaint();
+                }
             });
 
             ui.separator();
 
             ui.horizontal(|ui| {
+                ui.heading("Shaker Sort");
+                ui.allocate_space(Vec2::new(0.0, 250.0));
+                self.shaker_sort.step();
+                self.shaker_sort.plot_chart(ui);
+                if !self.shaker_sort.finished() {
+                    ui.ctx().request_repaint();
+                }
+            });
+
+            ui.separator();
+            ui.horizontal(|ui| {
                 ui.heading("Insertion Sort");
                 ui.allocate_space(Vec2::new(0.0, 250.0));
                 self.insertion_sort.step();
                 self.insertion_sort.plot_chart(ui);
+                if !self.insertion_sort.finished() {
+                    ui.ctx().request_repaint();
+                }
             });
-
-            // And update!
-            ui.ctx().request_repaint();
         });
     }
 }

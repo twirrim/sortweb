@@ -1,10 +1,13 @@
 #![warn(clippy::all, rust_2018_idioms)]
 mod app;
-pub use app::SortApp;
+mod shaker;
 mod bubble;
-pub use bubble::BubbleSort;
 mod insertion;
+
+pub use app::SortApp;
+pub use bubble::BubbleSort;
 pub use insertion::InsertionSort;
+pub use shaker::ShakerSort;
 
 use ecolor::Color32;
 use egui_plot::Bar;
