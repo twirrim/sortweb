@@ -14,7 +14,7 @@ pub struct BubbleSort {
 impl BubbleSort {
     pub fn new(data: Vec<Bar>) -> Self {
         let mut sort = BubbleSort {
-            data: data,
+            data,
             current_loc: 0,
             changed: false,
             finished: false,
@@ -29,7 +29,7 @@ impl BubbleSort {
             return;
         };
         if self.current_loc + 1 == self.data.len() {
-            if self.changed == false {
+            if !self.changed {
                 // Nothing more to do
                 self.finished = true;
                 return;
@@ -79,13 +79,16 @@ fn make_bar_vec(size: usize) -> Vec<Bar> {
     let mut numbers: Vec<usize> = (0..size).collect();
     numbers.shuffle(&mut rng);
     println!("Starting State: {:?}", numbers);
+
     // Now turn it in to a vector of BarChart Bars
     let mut bars: Vec<Bar> = vec![];
-    for index in 0..size {
-        let mut bar = Bar::new(index as f64, numbers[index] as f64);
+
+    for (index, value) in numbers.iter().enumerate() {
+        let mut bar = Bar::new(index as f64, *value as f64);
         bar.fill = Color32::RED;
         bars.push(bar);
     }
+
     bars
 }
 
