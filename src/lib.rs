@@ -3,6 +3,8 @@ mod app;
 pub use app::SortApp;
 mod bubble;
 pub use bubble::BubbleSort;
+mod insertion;
+pub use insertion::InsertionSort;
 
 use ecolor::Color32;
 use egui_plot::Bar;

@@ -4,7 +4,7 @@ use egui_plot::{Bar, BarChart, Plot};
 
 pub struct BubbleSort {
     data: Vec<Bar>,
-    current_loc: usize,
+    cursor: usize,
     changed: bool,
     finished: bool,
 }
@@ -13,7 +13,7 @@ impl BubbleSort {
     pub fn new(data: Vec<Bar>) -> Self {
         let mut sort = BubbleSort {
             data,
-            current_loc: 0,
+            cursor: 0,
             changed: false,
             finished: false,
         };
@@ -26,35 +26,36 @@ impl BubbleSort {
         if self.finished {
             return;
         };
-        if self.current_loc + 1 == self.data.len() {
+        if self.cursor + 1 == self.data.len() {
             if !self.changed {
                 // Nothing more to do
                 self.finished = true;
+                self.data[self.cursor].fill = Color32::RED;
                 return;
             }
             // More work to do, back to the beginning!
-            self.data[self.current_loc].fill = Color32::RED;
-            self.current_loc = 0;
+            self.data[self.cursor].fill = Color32::RED;
+            self.cursor = 0;
             self.changed = false;
         }
-        if self.data[self.current_loc].value > self.data[self.current_loc + 1].value {
+        if self.data[self.cursor].value > self.data[self.cursor + 1].value {
             // Swap them around
-            let temp = self.data[self.current_loc].value;
-            self.data[self.current_loc].value = self.data[self.current_loc + 1].value;
-            self.data[self.current_loc + 1].value = temp;
+            let temp = self.data[self.cursor].value;
+            self.data[self.cursor].value = self.data[self.cursor + 1].value;
+            self.data[self.cursor + 1].value = temp;
             // Note that we've had to make a change
             self.changed = true;
         }
         // Update location
-        self.data[self.current_loc].fill = Color32::RED;
-        self.current_loc += 1;
-        self.data[self.current_loc].fill = Color32::GREEN;
+        self.data[self.cursor].fill = Color32::RED;
+        self.cursor += 1;
+        self.data[self.cursor].fill = Color32::GREEN;
     }
 
     // Make this a trait!
     pub fn plot_chart(&self, ui: &mut Ui) -> Response {
-        let chart = BarChart::new(self.data.clone()).name("Current State");
-        Plot::new("Normal Distribution Demo")
+        let chart = BarChart::new(self.data.clone()).name("Bubble Sort");
+        Plot::new("Bubble Sort Demo")
             .clamp_grid(true)
             .y_axis_width(3)
             .show(ui, |plot_ui| plot_ui.bar_chart(chart))

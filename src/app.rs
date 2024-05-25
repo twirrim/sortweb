@@ -1,5 +1,8 @@
 use crate::bubble::BubbleSort;
+use crate::insertion::InsertionSort;
 use crate::make_bar_vec;
+
+use egui::Vec2;
 
 // TODO: Learn how to disable the state saving.  Don't want it.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -7,12 +10,16 @@ use crate::make_bar_vec;
 pub struct SortApp {
     #[serde(skip)]
     bubble_sort: BubbleSort,
+    #[serde(skip)]
+    insertion_sort: InsertionSort,
 }
 
 impl Default for SortApp {
     fn default() -> Self {
+        let starting_data = make_bar_vec(250);
         Self {
-            bubble_sort: BubbleSort::new(make_bar_vec(100)),
+            bubble_sort: BubbleSort::new(starting_data.clone()),
+            insertion_sort: InsertionSort::new(starting_data.clone()),
         }
     }
 }
@@ -73,13 +80,21 @@ impl eframe::App for SortApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("Sort Visualiser");
+            ui.horizontal(|ui| {
+                ui.heading("Bubble Sort");
+                ui.allocate_space(Vec2::new(0.0, 250.0));
+                self.bubble_sort.step();
+                self.bubble_sort.plot_chart(ui);
+            });
 
             ui.separator();
-            // Step the bubble sort
-            self.bubble_sort.step();
 
-            self.bubble_sort.plot_chart(ui);
+            ui.horizontal(|ui| {
+                ui.heading("Insertion Sort");
+                ui.allocate_space(Vec2::new(0.0, 250.0));
+                self.insertion_sort.step();
+                self.insertion_sort.plot_chart(ui);
+            });
 
             // And update!
             ui.ctx().request_repaint();
