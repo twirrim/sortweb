@@ -1,5 +1,5 @@
 use ecolor::Color32;
-use egui::*;
+use egui::{ecolor, Response, Ui};
 use egui_plot::{Bar, BarChart, Plot};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
@@ -33,12 +33,11 @@ impl BubbleSort {
                 // Nothing more to do
                 self.finished = true;
                 return;
-            } else {
-                // More work to do, back to the beginning!
-                self.data[self.current_loc].fill = Color32::RED;
-                self.current_loc = 0;
-                self.changed = false;
             }
+            // More work to do, back to the beginning!
+            self.data[self.current_loc].fill = Color32::RED;
+            self.current_loc = 0;
+            self.changed = false;
         }
         if self.data[self.current_loc].value > self.data[self.current_loc + 1].value {
             // Swap them around
@@ -78,7 +77,6 @@ fn make_bar_vec(size: usize) -> Vec<Bar> {
     let mut rng = thread_rng();
     let mut numbers: Vec<usize> = (0..size).collect();
     numbers.shuffle(&mut rng);
-    println!("Starting State: {:?}", numbers);
 
     // Now turn it in to a vector of BarChart Bars
     let mut bars: Vec<Bar> = vec![];
@@ -112,7 +110,7 @@ impl SortApp {
             return eframe::get_value(storage, eframe::APP_KEY).unwrap_or_default();
         }
 
-        Default::default()
+        SortApp::default()
     }
 }
 
