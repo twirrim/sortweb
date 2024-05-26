@@ -3,11 +3,13 @@ mod app;
 mod bubble;
 mod insertion;
 mod shaker;
+mod shell;
 
 pub use app::SortApp;
 pub use bubble::BubbleSort;
 pub use insertion::InsertionSort;
 pub use shaker::ShakerSort;
+pub use shell::ShellSort;
 
 use ecolor::Color32;
 use egui_plot::Bar;
