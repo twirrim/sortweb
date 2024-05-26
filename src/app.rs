@@ -2,6 +2,7 @@ use crate::bubble::BubbleSort;
 use crate::insertion::InsertionSort;
 use crate::make_bar_vec;
 use crate::shaker::ShakerSort;
+use crate::shell::ShellSort;
 
 use egui::Vec2;
 
@@ -15,6 +16,8 @@ pub struct SortApp {
     shaker_sort: ShakerSort,
     #[serde(skip)]
     insertion_sort: InsertionSort,
+    #[serde(skip)]
+    shell_sort: ShellSort,
 }
 
 impl Default for SortApp {
@@ -24,6 +27,7 @@ impl Default for SortApp {
             bubble_sort: BubbleSort::new(starting_data.clone()),
             shaker_sort: ShakerSort::new(starting_data.clone()),
             insertion_sort: InsertionSort::new(starting_data.clone()),
+            shell_sort: ShellSort::new(starting_data.clone()),
         }
     }
 }
@@ -86,7 +90,12 @@ impl eframe::App for SortApp {
             // The central panel the region left after adding TopPanel's and SidePanel's
             ui.horizontal(|ui| {
                 ui.heading("Bubble Sort");
-                ui.allocate_space(Vec2::new(0.0, 250.0));
+                ui.allocate_space(Vec2::new(0.0, 100.0));
+                ui.add(egui::Label::new(format!(
+                    "Avg Dist.: {:.2}",
+                    self.bubble_sort.calculate_distance()
+                )));
+
                 self.bubble_sort.step();
                 self.bubble_sort.plot_chart(ui);
                 if !self.bubble_sort.finished() {
@@ -98,7 +107,11 @@ impl eframe::App for SortApp {
 
             ui.horizontal(|ui| {
                 ui.heading("Shaker Sort");
-                ui.allocate_space(Vec2::new(0.0, 250.0));
+                ui.allocate_space(Vec2::new(0.0, 100.0));
+                ui.add(egui::Label::new(format!(
+                    "Avg Dist.: {:.2}",
+                    self.shaker_sort.calculate_distance()
+                )));
                 self.shaker_sort.step();
                 self.shaker_sort.plot_chart(ui);
                 if !self.shaker_sort.finished() {
@@ -109,10 +122,29 @@ impl eframe::App for SortApp {
             ui.separator();
             ui.horizontal(|ui| {
                 ui.heading("Insertion Sort");
-                ui.allocate_space(Vec2::new(0.0, 250.0));
+                ui.allocate_space(Vec2::new(0.0, 100.0));
+                ui.add(egui::Label::new(format!(
+                    "Avg Dist.: {:.2}",
+                    self.insertion_sort.calculate_distance()
+                )));
+
                 self.insertion_sort.step();
                 self.insertion_sort.plot_chart(ui);
                 if !self.insertion_sort.finished() {
+                    ui.ctx().request_repaint();
+                }
+            });
+            ui.horizontal(|ui| {
+                ui.heading("Shell Sort");
+                ui.allocate_space(Vec2::new(0.0, 100.0));
+                ui.add(egui::Label::new(format!(
+                    "Avg Dist.: {:.2}",
+                    self.shell_sort.calculate_distance()
+                )));
+
+                self.shell_sort.step();
+                self.shell_sort.plot_chart(ui);
+                if !self.shell_sort.finished() {
                     ui.ctx().request_repaint();
                 }
             });
