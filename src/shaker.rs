@@ -27,6 +27,10 @@ impl ShakerSort {
         self.finished
     }
 
+    pub fn data(&self) -> Vec<Bar> {
+        self.data.clone()
+    }
+
     pub fn calculate_distance(&self) -> f64 {
         let mut distance = 0.0;
         for entry in self.data.iter() {

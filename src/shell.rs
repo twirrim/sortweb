@@ -28,6 +28,10 @@ impl ShellSort {
         self.finished
     }
 
+    pub fn data(&self) -> Vec<Bar> {
+        self.data.clone()
+    }
+
     pub fn calculate_distance(&self) -> f64 {
         let mut distance = 0.0;
         for entry in self.data.iter() {
@@ -43,6 +47,10 @@ impl ShellSort {
 
         if self.gap == 0 {
             self.finished = true;
+            for bar in self.data.iter_mut() {
+                bar.fill = Color32::RED;
+            }
+            return;
         }
 
         if self.i < self.data.len() {
