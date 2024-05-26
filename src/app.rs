@@ -70,7 +70,7 @@ impl eframe::App for SortApp {
                     ui.add_space(16.0);
                 }
                 ui.add(egui::github_link_file!(
-                    "https://github.com/twirrim/sortweb/",
+                    "https://github.com/twirrim/sortweb/blob/main/",
                     "Source code."
                 ));
 
