@@ -57,19 +57,17 @@ impl ShakerSort {
                 self.changed = false;
                 self.ascending = false;
             }
-        } else {
-            if a == 0 {
-                if !self.changed {
-                    self.finished = true;
-                    self.data[self.cursor].fill = Color32::RED;
-                    return;
-                }
-                // More work to do, go back towards the end!
+        } else if a == 0 {
+            if !self.changed {
+                self.finished = true;
                 self.data[self.cursor].fill = Color32::RED;
-                self.cursor = 0;
-                self.changed = false;
-                self.ascending = true;
+                return;
             }
+            // More work to do, go back towards the end!
+            self.data[self.cursor].fill = Color32::RED;
+            self.cursor = 0;
+            self.changed = false;
+            self.ascending = true;
         }
 
         let mut swap = false;
