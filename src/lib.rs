@@ -4,12 +4,14 @@ mod bubble;
 mod insertion;
 mod shaker;
 mod shell;
+mod heap;
 
 pub use app::SortApp;
 pub use bubble::BubbleSort;
 pub use insertion::InsertionSort;
 pub use shaker::ShakerSort;
 pub use shell::ShellSort;
+pub use heap::HeapSort;
 
 use ecolor::Color32;
 use egui_plot::Bar;
@@ -97,4 +99,14 @@ mod tests {
         }
         assert_eq!(sort.data(), get_expected());
     }
+
+    #[test]
+    fn test_heap_sort() {
+        let mut sort = HeapSort::new(get_input().clone());
+        while !sort.finished() {
+            sort.step();
+        }
+        assert_eq!(sort.data(), get_expected());
+    }
+
 }

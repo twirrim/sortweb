@@ -3,6 +3,7 @@ use crate::insertion::InsertionSort;
 use crate::make_bar_vec;
 use crate::shaker::ShakerSort;
 use crate::shell::ShellSort;
+use crate::heap::HeapSort;
 
 use egui::Vec2;
 
@@ -18,6 +19,8 @@ pub struct SortApp {
     insertion_sort: InsertionSort,
     #[serde(skip)]
     shell_sort: ShellSort,
+    #[serde(skip)]
+    heap_sort: HeapSort,
 }
 
 impl Default for SortApp {
@@ -28,6 +31,7 @@ impl Default for SortApp {
             shaker_sort: ShakerSort::new(starting_data.clone()),
             insertion_sort: InsertionSort::new(starting_data.clone()),
             shell_sort: ShellSort::new(starting_data.clone()),
+            heap_sort: HeapSort::new(starting_data.clone()),
         }
     }
 }
@@ -134,6 +138,7 @@ impl eframe::App for SortApp {
                     ui.ctx().request_repaint();
                 }
             });
+            ui.separator();
             ui.horizontal(|ui| {
                 ui.heading("Shell Sort");
                 ui.allocate_space(Vec2::new(0.0, 100.0));
@@ -145,6 +150,22 @@ impl eframe::App for SortApp {
                 self.shell_sort.step();
                 self.shell_sort.plot_chart(ui);
                 if !self.shell_sort.finished() {
+                    ui.ctx().request_repaint();
+                }
+            });
+
+            ui.separator();
+            ui.horizontal(|ui| {
+                ui.heading("Heap Sort");
+                ui.allocate_space(Vec2::new(0.0, 100.0));
+                ui.add(egui::Label::new(format!(
+                    "Avg Dist.: {:.2}",
+                    self.heap_sort.calculate_distance()
+                )));
+
+                self.heap_sort.step();
+                self.heap_sort.plot_chart(ui);
+                if !self.heap_sort.finished() {
                     ui.ctx().request_repaint();
                 }
             });
