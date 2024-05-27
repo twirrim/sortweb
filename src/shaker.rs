@@ -2,12 +2,19 @@ use ecolor::Color32;
 use egui::{Response, Ui};
 use egui_plot::{Bar, BarChart, Plot};
 
+#[derive(Debug, Clone)]
+enum Phase {
+    Ascending,
+    Descending,
+}
+
+#[derive(Debug)]
 pub struct ShakerSort {
     data: Vec<Bar>,
     cursor: usize,
     changed: bool,
     finished: bool,
-    ascending: bool,
+    phase: Phase,
 }
 
 impl ShakerSort {
@@ -17,7 +24,7 @@ impl ShakerSort {
             cursor: 0,
             changed: false,
             finished: false,
-            ascending: true,
+            phase: Phase::Ascending,
         };
         sort.data[0].fill = Color32::GREEN;
         sort
@@ -45,64 +52,56 @@ impl ShakerSort {
             return;
         };
 
-        // I think I could do this more D.R.Y., with a bit more thought
-
-        let a = self.cursor;
-        if self.ascending {
-            if a == self.data.len() - 1 {
-                if !self.changed {
-                    self.finished = true;
-                    self.data[self.cursor].fill = Color32::RED;
+        match self.phase {
+            Phase::Ascending => {
+                if self.cursor == self.data.len() - 1 {
+                    if !self.changed {
+                        self.finished = true;
+                        self.data[self.cursor].fill = Color32::RED;
+                    }
+                    // More work to go, switch direction!
+                    self.changed = false;
+                    self.phase = Phase::Descending;
                     return;
                 }
-                // More work to do, go back to the beginning!
-                self.data[self.cursor].fill = Color32::RED;
-                self.cursor = self.data.len() - 1;
-                self.changed = false;
-                self.ascending = false;
+                if self.data[self.cursor].value > self.data[self.cursor + 1].value {
+                    // Swap!
+                    let temp = self.data[self.cursor].value;
+                    self.data[self.cursor].value = self.data[self.cursor + 1].value;
+                    self.data[self.cursor + 1].value = temp;
+                    self.changed = true;
+                }
+                self.cursor += 1;
             }
-        } else if a == 0 {
-            if !self.changed {
-                self.finished = true;
-                self.data[self.cursor].fill = Color32::RED;
-                return;
-            }
-            // More work to do, go back towards the end!
-            self.data[self.cursor].fill = Color32::RED;
-            self.cursor = 0;
-            self.changed = false;
-            self.ascending = true;
-        }
-
-        let mut swap = false;
-        let b: usize;
-        if self.ascending {
-            b = a + 1;
-            if self.data[a].value > self.data[b].value {
-                swap = true;
-            }
-        } else {
-            b = a - 1;
-            if self.data[a].value < self.data[b].value {
-                swap = true;
+            Phase::Descending => {
+                if self.cursor == 0 {
+                    if !self.changed {
+                        self.finished = true;
+                        self.data[self.cursor].fill = Color32::RED;
+                    }
+                    // More work to go, switch direction!
+                    self.changed = false;
+                    self.phase = Phase::Ascending;
+                    return;
+                }
+                if self.data[self.cursor].value < self.data[self.cursor - 1].value {
+                    // Swap!
+                    let temp = self.data[self.cursor].value;
+                    self.data[self.cursor].value = self.data[self.cursor - 1].value;
+                    self.data[self.cursor - 1].value = temp;
+                    self.changed = true;
+                }
+                self.cursor -= 1;
             }
         }
-
-        if swap {
-            let temp = self.data[a].value;
-            self.data[a].value = self.data[b].value;
-            self.data[b].value = temp;
-            self.changed = true;
+        // Set colours
+        for (index, bar) in self.data.iter_mut().enumerate() {
+            if index == self.cursor {
+                bar.fill = Color32::GREEN;
+            } else {
+                bar.fill = Color32::RED;
+            }
         }
-
-        // Update location
-        self.data[self.cursor].fill = Color32::RED;
-        if self.ascending {
-            self.cursor += 1;
-        } else {
-            self.cursor -= 1;
-        }
-        self.data[self.cursor].fill = Color32::GREEN;
     }
 
     // Make this a trait!
