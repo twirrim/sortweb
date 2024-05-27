@@ -1,17 +1,17 @@
 #![warn(clippy::all, rust_2018_idioms)]
 mod app;
 mod bubble;
+mod heap;
 mod insertion;
 mod shaker;
 mod shell;
-mod heap;
 
 pub use app::SortApp;
 pub use bubble::BubbleSort;
+pub use heap::HeapSort;
 pub use insertion::InsertionSort;
 pub use shaker::ShakerSort;
 pub use shell::ShellSort;
-pub use heap::HeapSort;
 
 use ecolor::Color32;
 use egui_plot::Bar;
@@ -108,5 +108,4 @@ mod tests {
         }
         assert_eq!(sort.data(), get_expected());
     }
-
 }

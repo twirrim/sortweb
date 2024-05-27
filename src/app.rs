@@ -1,9 +1,9 @@
 use crate::bubble::BubbleSort;
+use crate::heap::HeapSort;
 use crate::insertion::InsertionSort;
 use crate::make_bar_vec;
 use crate::shaker::ShakerSort;
 use crate::shell::ShellSort;
-use crate::heap::HeapSort;
 
 use egui::Vec2;
 

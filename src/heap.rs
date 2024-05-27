@@ -27,9 +27,9 @@ impl HeapSort {
             j: 0,
             finished: false,
         };
-        for entry in sort.data.iter_mut(){
+        for entry in sort.data.iter_mut() {
             entry.fill = Color32::RED;
-        };
+        }
         sort
     }
 
@@ -74,7 +74,7 @@ impl HeapSort {
                 } else {
                     self.finished = true;
                     // Set the colors
-                    for bar in self.data.iter_mut(){
+                    for bar in self.data.iter_mut() {
                         bar.fill = Color32::RED;
                     }
                     return;
@@ -82,15 +82,15 @@ impl HeapSort {
             }
         }
         // Colour things
-        for (index, bar) in self.data.iter_mut().enumerate(){
+        for (index, bar) in self.data.iter_mut().enumerate() {
             if index == self.i {
                 bar.fill = Color32::GREEN;
-            } else if index ==self.j {
+            } else if index == self.j {
                 bar.fill = Color32::YELLOW;
             } else {
                 bar.fill = Color32::RED;
             }
-        };
+        }
     }
 
     fn heapify_down(&mut self, mut root: usize, end: usize) {
