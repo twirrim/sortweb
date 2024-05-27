@@ -11,6 +11,7 @@ If you clone this source code locally, and run "cargo run --release" it'll run i
 * Shaker
 * Insertion
 * Shell
+* Heap
 
 # TODO
 * Add other sort algorithms.

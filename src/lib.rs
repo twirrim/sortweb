@@ -1,12 +1,14 @@
 #![warn(clippy::all, rust_2018_idioms)]
 mod app;
 mod bubble;
+mod heap;
 mod insertion;
 mod shaker;
 mod shell;
 
 pub use app::SortApp;
 pub use bubble::BubbleSort;
+pub use heap::HeapSort;
 pub use insertion::InsertionSort;
 pub use shaker::ShakerSort;
 pub use shell::ShellSort;
@@ -92,6 +94,15 @@ mod tests {
     #[test]
     fn test_shell_sort() {
         let mut sort = ShellSort::new(get_input().clone());
+        while !sort.finished() {
+            sort.step();
+        }
+        assert_eq!(sort.data(), get_expected());
+    }
+
+    #[test]
+    fn test_heap_sort() {
+        let mut sort = HeapSort::new(get_input().clone());
         while !sort.finished() {
             sort.step();
         }
