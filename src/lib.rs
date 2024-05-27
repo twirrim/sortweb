@@ -43,10 +43,10 @@ mod tests {
     // I'm feeling lazy, and egui_plot::Bars contain lots of fields
     // I should do this in smarter way, though
     fn get_input() -> Vec<Bar> {
-        let numbers = vec![6, 2, 3, 6, 1, 2, 7, 8, 3, 2];
+        let numbers = [6, 2, 3, 6, 1, 2, 7, 8, 3, 2];
         let mut bars: Vec<Bar> = vec![];
         for (index, value) in numbers.iter().enumerate() {
-            let mut bar = Bar::new(index as f64, *value as f64);
+            let mut bar = Bar::new(index as f64, f64::from(*value));
             bar.fill = Color32::RED;
             bars.push(bar);
         }
@@ -54,10 +54,10 @@ mod tests {
     }
 
     fn get_expected() -> Vec<Bar> {
-        let sorted_numbers = vec![1, 2, 2, 2, 3, 3, 6, 6, 7, 8];
+        let sorted_numbers = [1, 2, 2, 2, 3, 3, 6, 6, 7, 8];
         let mut bars: Vec<Bar> = vec![];
         for (index, value) in sorted_numbers.iter().enumerate() {
-            let mut bar = Bar::new(index as f64, *value as f64);
+            let mut bar = Bar::new(index as f64, f64::from(*value));
             bar.fill = Color32::RED;
             bars.push(bar);
         }

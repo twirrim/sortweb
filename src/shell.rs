@@ -34,7 +34,7 @@ impl ShellSort {
 
     pub fn calculate_distance(&self) -> f64 {
         let mut distance = 0.0;
-        for entry in self.data.iter() {
+        for entry in &self.data {
             distance += (entry.argument - entry.value).abs();
         }
         distance / self.data.len() as f64
@@ -47,7 +47,7 @@ impl ShellSort {
 
         if self.gap == 0 {
             self.finished = true;
-            for bar in self.data.iter_mut() {
+            for bar in &mut self.data {
                 bar.fill = Color32::RED;
             }
             return;

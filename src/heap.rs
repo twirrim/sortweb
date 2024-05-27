@@ -36,7 +36,7 @@ impl HeapSort {
             heap_end: 0,
             finished: false,
         };
-        for entry in sort.data.iter_mut() {
+        for entry in &mut sort.data {
             entry.fill = Color32::RED;
         }
         sort
@@ -52,7 +52,7 @@ impl HeapSort {
 
     pub fn calculate_distance(&self) -> f64 {
         let mut distance = 0.0;
-        for entry in self.data.iter() {
+        for entry in &self.data {
             distance += (entry.argument - entry.value).abs();
         }
         distance / self.data.len() as f64
@@ -110,7 +110,7 @@ impl HeapSort {
                 } else {
                     self.finished = true;
                     // Set the colors
-                    for bar in self.data.iter_mut() {
+                    for bar in &mut self.data {
                         bar.fill = Color32::RED;
                     }
                     return;

@@ -40,7 +40,7 @@ impl ShakerSort {
 
     pub fn calculate_distance(&self) -> f64 {
         let mut distance = 0.0;
-        for entry in self.data.iter() {
+        for entry in &self.data {
             distance += (entry.argument - entry.value).abs();
         }
         distance / self.data.len() as f64
