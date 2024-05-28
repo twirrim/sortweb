@@ -16,4 +16,3 @@ If you clone this source code locally, and run "cargo run --release" it'll run i
 # TODO
 * Add other sort algorithms.
 * Decide how to represent them.  All in the same page running simultaneously? Button selector to choose which to show? Both?
-* Switch to a Sort trait that implements "step", maybe?  I've got too much code dupe between sort implementations
