@@ -1,9 +1,9 @@
 use crate::bubble::BubbleSort;
 use crate::heap::HeapSort;
 use crate::insertion::InsertionSort;
-use crate::make_bar_vec;
 use crate::shaker::ShakerSort;
 use crate::shell::ShellSort;
+use crate::{make_bar_vec, plot_chart};
 
 use egui::Vec2;
 
@@ -101,7 +101,7 @@ impl eframe::App for SortApp {
                 )));
 
                 self.bubble_sort.step();
-                self.bubble_sort.plot_chart(ui);
+                plot_chart(ui, "Bubble Sort", &self.bubble_sort.data());
                 if !self.bubble_sort.finished() {
                     ui.ctx().request_repaint();
                 }
@@ -117,7 +117,7 @@ impl eframe::App for SortApp {
                     self.shaker_sort.calculate_distance()
                 )));
                 self.shaker_sort.step();
-                self.shaker_sort.plot_chart(ui);
+                plot_chart(ui, "Shaker Sort", &self.shaker_sort.data());
                 if !self.shaker_sort.finished() {
                     ui.ctx().request_repaint();
                 }
@@ -133,7 +133,7 @@ impl eframe::App for SortApp {
                 )));
 
                 self.insertion_sort.step();
-                self.insertion_sort.plot_chart(ui);
+                plot_chart(ui, "Insertion Sort", &self.insertion_sort.data());
                 if !self.insertion_sort.finished() {
                     ui.ctx().request_repaint();
                 }
@@ -148,7 +148,7 @@ impl eframe::App for SortApp {
                 )));
 
                 self.shell_sort.step();
-                self.shell_sort.plot_chart(ui);
+                plot_chart(ui, "Shell Sort", &self.shell_sort.data());
                 if !self.shell_sort.finished() {
                     ui.ctx().request_repaint();
                 }
@@ -164,7 +164,7 @@ impl eframe::App for SortApp {
                 )));
 
                 self.heap_sort.step();
-                self.heap_sort.plot_chart(ui);
+                plot_chart(ui, "Heap Sort", &self.heap_sort.data());
                 if !self.heap_sort.finished() {
                     ui.ctx().request_repaint();
                 }

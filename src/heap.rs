@@ -1,6 +1,6 @@
 use ecolor::Color32;
-use egui::{Response, Ui};
-use egui_plot::{Bar, BarChart, Plot};
+
+use egui_plot::{Bar};
 
 #[derive(Debug, Clone)]
 enum Phase {
@@ -127,15 +127,5 @@ impl HeapSort {
                 bar.fill = Color32::RED;
             }
         }
-    }
-
-    // Make this a trait!
-    pub fn plot_chart(&self, ui: &mut Ui) -> Response {
-        let chart = BarChart::new(self.data.clone()).name("Heap Sort");
-        Plot::new("Heap Sort Demo")
-            .clamp_grid(true)
-            .y_axis_width(3)
-            .show(ui, |plot_ui| plot_ui.bar_chart(chart))
-            .response
     }
 }

@@ -1,6 +1,6 @@
 use ecolor::Color32;
-use egui::{Response, Ui};
-use egui_plot::{Bar, BarChart, Plot};
+
+use egui_plot::{Bar};
 
 pub struct BubbleSort {
     data: Vec<Bar>,
@@ -66,15 +66,5 @@ impl BubbleSort {
         self.data[self.cursor].fill = Color32::RED;
         self.cursor += 1;
         self.data[self.cursor].fill = Color32::GREEN;
-    }
-
-    // Make this a trait!
-    pub fn plot_chart(&self, ui: &mut Ui) -> Response {
-        let chart = BarChart::new(self.data.clone()).name("Bubble Sort");
-        Plot::new("Bubble Sort Demo")
-            .clamp_grid(true)
-            .y_axis_width(3)
-            .show(ui, |plot_ui| plot_ui.bar_chart(chart))
-            .response
     }
 }

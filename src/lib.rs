@@ -14,9 +14,19 @@ pub use shaker::ShakerSort;
 pub use shell::ShellSort;
 
 use ecolor::Color32;
-use egui_plot::Bar;
+use egui::{Response, Ui};
+use egui_plot::{Bar, BarChart, Plot};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+
+pub fn plot_chart(ui: &mut Ui, name: &str, data: &[Bar]) -> Response {
+    let chart = BarChart::new(data.to_owned()).name(name);
+    Plot::new(name)
+        .clamp_grid(true)
+        .y_axis_width(3)
+        .show(ui, |plot_ui| plot_ui.bar_chart(chart))
+        .response
+}
 
 pub fn make_bar_vec(size: usize) -> Vec<Bar> {
     // Produce a randomly shuffled vector of numbers first
