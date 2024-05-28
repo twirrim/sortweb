@@ -3,7 +3,7 @@ use crate::heap::HeapSort;
 use crate::insertion::InsertionSort;
 use crate::shaker::ShakerSort;
 use crate::shell::ShellSort;
-use crate::{make_bar_vec, plot_chart};
+use crate::{make_bar_vec, plot_chart, distance_to_optimal};
 
 use egui::Vec2;
 
@@ -97,7 +97,7 @@ impl eframe::App for SortApp {
                 ui.allocate_space(Vec2::new(0.0, 100.0));
                 ui.add(egui::Label::new(format!(
                     "Avg Dist.: {:.2}",
-                    self.bubble_sort.calculate_distance()
+                    distance_to_optimal(&self.bubble_sort.data())
                 )));
 
                 self.bubble_sort.step();
@@ -114,7 +114,7 @@ impl eframe::App for SortApp {
                 ui.allocate_space(Vec2::new(0.0, 100.0));
                 ui.add(egui::Label::new(format!(
                     "Avg Dist.: {:.2}",
-                    self.shaker_sort.calculate_distance()
+                    distance_to_optimal(&self.shaker_sort.data())
                 )));
                 self.shaker_sort.step();
                 plot_chart(ui, "Shaker Sort", &self.shaker_sort.data());
@@ -129,7 +129,7 @@ impl eframe::App for SortApp {
                 ui.allocate_space(Vec2::new(0.0, 100.0));
                 ui.add(egui::Label::new(format!(
                     "Avg Dist.: {:.2}",
-                    self.insertion_sort.calculate_distance()
+                    distance_to_optimal(&self.insertion_sort.data())
                 )));
 
                 self.insertion_sort.step();
@@ -144,7 +144,7 @@ impl eframe::App for SortApp {
                 ui.allocate_space(Vec2::new(0.0, 100.0));
                 ui.add(egui::Label::new(format!(
                     "Avg Dist.: {:.2}",
-                    self.shell_sort.calculate_distance()
+                    distance_to_optimal(&self.shell_sort.data())
                 )));
 
                 self.shell_sort.step();
@@ -160,7 +160,7 @@ impl eframe::App for SortApp {
                 ui.allocate_space(Vec2::new(0.0, 100.0));
                 ui.add(egui::Label::new(format!(
                     "Avg Dist.: {:.2}",
-                    self.heap_sort.calculate_distance()
+                    distance_to_optimal(&self.heap_sort.data())
                 )));
 
                 self.heap_sort.step();

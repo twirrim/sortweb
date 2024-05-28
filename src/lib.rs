@@ -28,6 +28,14 @@ pub fn plot_chart(ui: &mut Ui, name: &str, data: &[Bar]) -> Response {
         .response
 }
 
+pub fn distance_to_optimal(data: &[Bar]) -> f64 {
+    let mut distance = 0.0;
+    for entry in data {
+        distance += (entry.argument - entry.value).abs();
+    }
+    distance / data.len() as f64
+}
+
 pub fn make_bar_vec(size: usize) -> Vec<Bar> {
     // Produce a randomly shuffled vector of numbers first
     let mut rng = thread_rng();
