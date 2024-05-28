@@ -1,6 +1,6 @@
 use ecolor::Color32;
 
-use egui_plot::{Bar};
+use egui_plot::Bar;
 
 #[derive(Debug, Clone)]
 enum Phase {

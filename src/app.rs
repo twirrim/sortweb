@@ -3,7 +3,7 @@ use crate::heap::HeapSort;
 use crate::insertion::InsertionSort;
 use crate::shaker::ShakerSort;
 use crate::shell::ShellSort;
-use crate::{make_bar_vec, plot_chart, distance_to_optimal};
+use crate::{distance_to_optimal, make_bar_vec, plot_chart};
 
 use egui::Vec2;
 
