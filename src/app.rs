@@ -5,7 +5,7 @@ use crate::shaker::ShakerSort;
 use crate::shell::ShellSort;
 use crate::{distance_to_optimal, make_bar_vec, plot_chart};
 
-use egui::Vec2;
+use egui_extras::{Column, TableBuilder};
 
 // TODO: Learn how to disable the state saving.  Don't want it.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -91,84 +91,112 @@ impl eframe::App for SortApp {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.horizontal(|ui| {
-                ui.heading("Bubble Sort");
-                ui.allocate_space(Vec2::new(0.0, 100.0));
-                ui.add(egui::Label::new(format!(
-                    "Avg Dist.: {:.2}",
-                    distance_to_optimal(&self.bubble_sort.data())
-                )));
+            TableBuilder::new(ui)
+                .column(Column::auto().resizable(true))
+                .column(Column::auto().resizable(true))
+                .column(Column::remainder())
+                .header(20.0, |mut header| {
+                    header.col(|ui| {
+                        ui.heading("Sort");
+                    });
+                    header.col(|ui| {
+                        ui.heading("Avg. Distance from optimal");
+                    });
+                    header.col(|ui| {
+                        ui.heading("");
+                    });
+                })
+                .body(|mut body| {
+                    // Bubble Sort
+                    body.row(100.0, |mut row| {
+                        row.col(|ui| {
+                            ui.label("Bubble");
+                        });
+                        row.col(|ui| {
+                            ui.label(format!(
+                                "{:.2}",
+                                distance_to_optimal(&self.bubble_sort.data())
+                            ));
+                        });
+                        row.col(|ui| {
+                            self.bubble_sort.step();
+                            plot_chart(ui, "bubble sort", &self.bubble_sort.data());
+                        });
+                    });
+                    // Shaker Sort
+                    body.row(100.0, |mut row| {
+                        row.col(|ui| {
+                            ui.label("Shaker");
+                        });
+                        row.col(|ui| {
+                            ui.label(format!(
+                                "{:.2}",
+                                distance_to_optimal(&self.shaker_sort.data())
+                            ));
+                        });
+                        row.col(|ui| {
+                            self.shaker_sort.step();
+                            plot_chart(ui, "shaker sort", &self.shaker_sort.data());
+                        });
+                    });
+                    // Insertion Sort
+                    body.row(100.0, |mut row| {
+                        row.col(|ui| {
+                            ui.label("Insertion");
+                        });
+                        row.col(|ui| {
+                            ui.label(format!(
+                                "{:.2}",
+                                distance_to_optimal(&self.insertion_sort.data())
+                            ));
+                        });
+                        row.col(|ui| {
+                            self.insertion_sort.step();
+                            plot_chart(ui, "insertion sort", &self.insertion_sort.data());
+                        });
+                    });
+                    // Shell Sort
+                    body.row(100.0, |mut row| {
+                        row.col(|ui| {
+                            ui.label("Shell");
+                        });
+                        row.col(|ui| {
+                            ui.label(format!(
+                                "{:.2}",
+                                distance_to_optimal(&self.shell_sort.data())
+                            ));
+                        });
+                        row.col(|ui| {
+                            self.shell_sort.step();
+                            plot_chart(ui, "shell sort", &self.shell_sort.data());
+                        });
+                    });
+                    // Heap Sort
+                    body.row(100.0, |mut row| {
+                        row.col(|ui| {
+                            ui.label("Heap");
+                        });
+                        row.col(|ui| {
+                            ui.label(format!(
+                                "{:.2}",
+                                distance_to_optimal(&self.heap_sort.data())
+                            ));
+                        });
+                        row.col(|ui| {
+                            self.heap_sort.step();
+                            plot_chart(ui, "heap sort", &self.heap_sort.data());
+                        });
+                    });
+                });
 
-                self.bubble_sort.step();
-                plot_chart(ui, "Bubble Sort", &self.bubble_sort.data());
-                if !self.bubble_sort.finished() {
-                    ui.ctx().request_repaint();
-                }
-            });
-
-            ui.separator();
-
-            ui.horizontal(|ui| {
-                ui.heading("Shaker Sort");
-                ui.allocate_space(Vec2::new(0.0, 100.0));
-                ui.add(egui::Label::new(format!(
-                    "Avg Dist.: {:.2}",
-                    distance_to_optimal(&self.shaker_sort.data())
-                )));
-                self.shaker_sort.step();
-                plot_chart(ui, "Shaker Sort", &self.shaker_sort.data());
-                if !self.shaker_sort.finished() {
-                    ui.ctx().request_repaint();
-                }
-            });
-
-            ui.separator();
-            ui.horizontal(|ui| {
-                ui.heading("Insertion Sort");
-                ui.allocate_space(Vec2::new(0.0, 100.0));
-                ui.add(egui::Label::new(format!(
-                    "Avg Dist.: {:.2}",
-                    distance_to_optimal(&self.insertion_sort.data())
-                )));
-
-                self.insertion_sort.step();
-                plot_chart(ui, "Insertion Sort", &self.insertion_sort.data());
-                if !self.insertion_sort.finished() {
-                    ui.ctx().request_repaint();
-                }
-            });
-            ui.separator();
-            ui.horizontal(|ui| {
-                ui.heading("Shell Sort");
-                ui.allocate_space(Vec2::new(0.0, 100.0));
-                ui.add(egui::Label::new(format!(
-                    "Avg Dist.: {:.2}",
-                    distance_to_optimal(&self.shell_sort.data())
-                )));
-
-                self.shell_sort.step();
-                plot_chart(ui, "Shell Sort", &self.shell_sort.data());
-                if !self.shell_sort.finished() {
-                    ui.ctx().request_repaint();
-                }
-            });
-
-            ui.separator();
-            ui.horizontal(|ui| {
-                ui.heading("Heap Sort");
-                ui.allocate_space(Vec2::new(0.0, 100.0));
-                ui.add(egui::Label::new(format!(
-                    "Avg Dist.: {:.2}",
-                    distance_to_optimal(&self.heap_sort.data())
-                )));
-
-                self.heap_sort.step();
-                plot_chart(ui, "Heap Sort", &self.heap_sort.data());
-                if !self.heap_sort.finished() {
-                    ui.ctx().request_repaint();
-                }
-            });
+            if !self.bubble_sort.finished()
+                || !self.shaker_sort.finished()
+                || !self.insertion_sort.finished()
+                || !self.shell_sort.finished()
+                || !self.heap_sort.finished()
+            {
+                ui.ctx().request_repaint();
+            }
         });
     }
 }

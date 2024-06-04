@@ -36,17 +36,17 @@ pub fn distance_to_optimal(data: &[Bar]) -> f64 {
     distance / data.len() as f64
 }
 
-pub fn make_bar_vec(size: usize) -> Vec<Bar> {
+pub fn make_bar_vec(size: u16) -> Vec<Bar> {
     // Produce a randomly shuffled vector of numbers first
     let mut rng = thread_rng();
-    let mut numbers: Vec<usize> = (0..size).collect();
+    let mut numbers: Vec<u16> = (0..size).collect();
     numbers.shuffle(&mut rng);
 
     // Now turn it in to a vector of BarChart Bars
     let mut bars: Vec<Bar> = vec![];
 
     for (index, value) in numbers.iter().enumerate() {
-        let mut bar = Bar::new(index as f64, *value as f64);
+        let mut bar = Bar::new(index as f64, f64::from(*value));
         bar.fill = Color32::RED;
         bars.push(bar);
     }
