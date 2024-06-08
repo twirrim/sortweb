@@ -1,23 +1,21 @@
-use ecolor::Color32;
-
-use egui_plot::Bar;
+use crate::{Comparison, Data};
 
 pub struct BubbleSort {
-    data: Vec<Bar>,
+    data: Data,
     cursor: usize,
     changed: bool,
     finished: bool,
 }
 
 impl BubbleSort {
-    pub fn new(data: Vec<Bar>) -> Self {
+    pub fn new(data: Data) -> Self {
         let mut sort = BubbleSort {
             data,
             cursor: 0,
             changed: false,
             finished: false,
         };
-        sort.data[0].fill = Color32::GREEN;
+        sort.data.set_to_green(0);
         sort
     }
 
@@ -25,7 +23,7 @@ impl BubbleSort {
         self.finished
     }
 
-    pub fn data(&self) -> Vec<Bar> {
+    pub fn data(&self) -> Data {
         self.data.clone()
     }
 
@@ -38,25 +36,24 @@ impl BubbleSort {
             if !self.changed {
                 // Nothing more to do
                 self.finished = true;
-                self.data[self.cursor].fill = Color32::RED;
+                self.data.restore_base_colours();
                 return;
             }
             // More work to do, back to the beginning!
-            self.data[self.cursor].fill = Color32::RED;
+            self.data.restore_base_colours();
             self.cursor = 0;
             self.changed = false;
         }
-        if self.data[self.cursor].value > self.data[self.cursor + 1].value {
-            // Swap them around
-            let temp = self.data[self.cursor].value;
-            self.data[self.cursor].value = self.data[self.cursor + 1].value;
-            self.data[self.cursor + 1].value = temp;
-            // Note that we've had to make a change
-            self.changed = true;
+        match self.data.compare(self.cursor, self.cursor + 1) {
+            Comparison::Equal | Comparison::Less => {}
+            Comparison::Greater => {
+                self.data.swap(self.cursor, self.cursor + 1);
+                self.changed = true;
+            }
         }
         // Update location
-        self.data[self.cursor].fill = Color32::RED;
+        self.data.restore_base_colours();
         self.cursor += 1;
-        self.data[self.cursor].fill = Color32::GREEN;
+        self.data.set_to_green(self.cursor);
     }
 }

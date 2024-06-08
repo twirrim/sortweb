@@ -1,6 +1,4 @@
-use ecolor::Color32;
-
-use egui_plot::Bar;
+use crate::{Comparison, Data};
 
 #[derive(Debug, Clone)]
 enum Phase {
@@ -11,7 +9,7 @@ enum Phase {
 
 #[derive(Debug, Clone)]
 pub struct HeapSort {
-    data: Vec<Bar>,
+    data: Data,
     size: usize,
     phase: Phase,
     previous_phase: Phase,
@@ -23,7 +21,7 @@ pub struct HeapSort {
 }
 
 impl HeapSort {
-    pub fn new(data: Vec<Bar>) -> Self {
+    pub fn new(data: Data) -> Self {
         let size = data.len();
         let mut sort = Self {
             data,
@@ -36,9 +34,7 @@ impl HeapSort {
             heap_end: 0,
             finished: false,
         };
-        for entry in &mut sort.data {
-            entry.fill = Color32::RED;
-        }
+        sort.data.restore_base_colours();
         sort
     }
 
@@ -46,7 +42,7 @@ impl HeapSort {
         self.finished
     }
 
-    pub fn data(&self) -> Vec<Bar> {
+    pub fn data(&self) -> Data {
         self.data.clone()
     }
 
@@ -61,19 +57,20 @@ impl HeapSort {
                 let right = 2 * self.heap_root + 2;
                 let mut largest = self.heap_root;
 
-                if left < self.heap_end && self.data[left].value > self.data[largest].value {
+                if left < self.heap_end && self.data.compare(left, largest) == Comparison::Greater {
                     largest = left;
                 }
-                if right < self.heap_end && self.data[right].value > self.data[largest].value {
+
+                if right < self.heap_end && self.data.compare(right, largest) == Comparison::Greater
+                {
                     largest = right;
                 }
                 if largest == self.heap_root {
                     self.phase = self.previous_phase.clone();
                     return;
                 }
-                let temp = self.data[self.heap_root].value;
-                self.data[self.heap_root].value = self.data[largest].value;
-                self.data[largest].value = temp;
+
+                self.data.swap(self.heap_root, largest);
                 self.heap_root = largest;
             }
             Phase::BuildingHeap => {
@@ -90,9 +87,7 @@ impl HeapSort {
             }
             Phase::SortingHeap => {
                 if self.j > 0 {
-                    let temp = self.data[0].value;
-                    self.data[0].value = self.data[self.j].value;
-                    self.data[self.j].value = temp;
+                    self.data.swap(0, self.j);
                     self.j -= 1;
 
                     self.previous_phase = Phase::SortingHeap;
@@ -101,23 +96,14 @@ impl HeapSort {
                     self.phase = Phase::HeapifyDown;
                 } else {
                     self.finished = true;
-                    // Set the colors
-                    for bar in &mut self.data {
-                        bar.fill = Color32::RED;
-                    }
+                    self.data.restore_base_colours();
                     return;
                 }
             }
         }
         // Colour things
-        for (index, bar) in self.data.iter_mut().enumerate() {
-            if index == self.i {
-                bar.fill = Color32::GREEN;
-            } else if index == self.j {
-                bar.fill = Color32::YELLOW;
-            } else {
-                bar.fill = Color32::RED;
-            }
-        }
+        self.data.restore_base_colours();
+        self.data.set_to_green(self.i);
+        self.data.set_to_yellow(self.j);
     }
 }

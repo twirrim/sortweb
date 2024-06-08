@@ -1,6 +1,4 @@
-use ecolor::Color32;
-
-use egui_plot::Bar;
+use crate::{Comparison, Data};
 
 #[derive(Debug, Clone)]
 enum Phase {
@@ -10,7 +8,7 @@ enum Phase {
 
 #[derive(Debug)]
 pub struct ShakerSort {
-    data: Vec<Bar>,
+    data: Data,
     cursor: usize,
     changed: bool,
     finished: bool,
@@ -18,7 +16,7 @@ pub struct ShakerSort {
 }
 
 impl ShakerSort {
-    pub fn new(data: Vec<Bar>) -> Self {
+    pub fn new(data: Data) -> Self {
         let mut sort = ShakerSort {
             data,
             cursor: 0,
@@ -26,7 +24,7 @@ impl ShakerSort {
             finished: false,
             phase: Phase::Ascending,
         };
-        sort.data[0].fill = Color32::GREEN;
+        sort.data.set_to_green(0);
         sort
     }
 
@@ -34,7 +32,7 @@ impl ShakerSort {
         self.finished
     }
 
-    pub fn data(&self) -> Vec<Bar> {
+    pub fn data(&self) -> Data {
         self.data.clone()
     }
 
@@ -49,19 +47,19 @@ impl ShakerSort {
                 if self.cursor == self.data.len() - 1 {
                     if !self.changed {
                         self.finished = true;
-                        self.data[self.cursor].fill = Color32::RED;
+                        self.data.restore_base_colours();
                     }
                     // More work to go, switch direction!
                     self.changed = false;
                     self.phase = Phase::Descending;
                     return;
                 }
-                if self.data[self.cursor].value > self.data[self.cursor + 1].value {
-                    // Swap!
-                    let temp = self.data[self.cursor].value;
-                    self.data[self.cursor].value = self.data[self.cursor + 1].value;
-                    self.data[self.cursor + 1].value = temp;
-                    self.changed = true;
+                match self.data.compare(self.cursor, self.cursor + 1) {
+                    Comparison::Greater => {
+                        self.data.swap(self.cursor, self.cursor + 1);
+                        self.changed = true;
+                    }
+                    Comparison::Equal | Comparison::Less => (),
                 }
                 self.cursor += 1;
             }
@@ -69,30 +67,25 @@ impl ShakerSort {
                 if self.cursor == 0 {
                     if !self.changed {
                         self.finished = true;
-                        self.data[self.cursor].fill = Color32::RED;
+                        self.data.restore_base_colours();
                     }
                     // More work to go, switch direction!
                     self.changed = false;
                     self.phase = Phase::Ascending;
                     return;
                 }
-                if self.data[self.cursor].value < self.data[self.cursor - 1].value {
-                    // Swap!
-                    let temp = self.data[self.cursor].value;
-                    self.data[self.cursor].value = self.data[self.cursor - 1].value;
-                    self.data[self.cursor - 1].value = temp;
-                    self.changed = true;
+                match self.data.compare(self.cursor, self.cursor - 1) {
+                    Comparison::Less => {
+                        self.data.swap(self.cursor, self.cursor - 1);
+                        self.changed = true;
+                    }
+                    Comparison::Equal | Comparison::Greater => (),
                 }
                 self.cursor -= 1;
             }
         }
         // Set colours
-        for (index, bar) in self.data.iter_mut().enumerate() {
-            if index == self.cursor {
-                bar.fill = Color32::GREEN;
-            } else {
-                bar.fill = Color32::RED;
-            }
-        }
+        self.data.restore_base_colours();
+        self.data.set_to_green(self.cursor);
     }
 }

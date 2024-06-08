@@ -1,9 +1,7 @@
-use ecolor::Color32;
-
-use egui_plot::Bar;
+use crate::{Comparison, Data};
 
 pub struct ShellSort {
-    data: Vec<Bar>,
+    data: Data,
     gap: usize,
     i: usize,
     j: usize,
@@ -11,7 +9,7 @@ pub struct ShellSort {
 }
 
 impl ShellSort {
-    pub fn new(data: Vec<Bar>) -> Self {
+    pub fn new(data: Data) -> Self {
         let len = data.len();
         let mut sort = Self {
             data,
@@ -20,7 +18,7 @@ impl ShellSort {
             j: 0,
             finished: false,
         };
-        sort.data[sort.i].fill = Color32::GREEN;
+        sort.data.set_to_green(sort.i);
         sort
     }
 
@@ -28,7 +26,7 @@ impl ShellSort {
         self.finished
     }
 
-    pub fn data(&self) -> Vec<Bar> {
+    pub fn data(&self) -> Data {
         self.data.clone()
     }
 
@@ -39,17 +37,15 @@ impl ShellSort {
 
         if self.gap == 0 {
             self.finished = true;
-            for bar in &mut self.data {
-                bar.fill = Color32::RED;
-            }
+            self.data.restore_base_colours();
             return;
         }
 
         if self.i < self.data.len() {
-            if self.j >= self.gap && self.data[self.j - self.gap].value > self.data[self.j].value {
-                let temp = self.data[self.j - self.gap].value;
-                self.data[self.j - self.gap].value = self.data[self.j].value;
-                self.data[self.j].value = temp;
+            if self.j >= self.gap
+                && self.data.compare(self.j - self.gap, self.j) == Comparison::Greater
+            {
+                self.data.swap(self.j - self.gap, self.j);
                 self.j -= self.gap;
             } else {
                 self.i += 1;
@@ -60,15 +56,9 @@ impl ShellSort {
             self.i = self.gap;
             self.j = self.i;
         }
-        // Loop through and set colors
-        for (index, bar) in self.data.iter_mut().enumerate() {
-            if index == self.j {
-                bar.fill = Color32::YELLOW;
-            } else if index == self.i {
-                bar.fill = Color32::GREEN;
-            } else {
-                bar.fill = Color32::RED;
-            }
-        }
+
+        self.data.restore_base_colours();
+        self.data.set_to_green(self.i);
+        self.data.set_to_yellow(self.j);
     }
 }
