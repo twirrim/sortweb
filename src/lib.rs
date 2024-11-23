@@ -30,7 +30,7 @@ pub fn plot_chart(ui: &mut Ui, name: &str, data: &Data) -> Response {
     let chart = BarChart::new(data.0.to_owned()).name(name);
     Plot::new(name)
         .clamp_grid(true)
-        .y_axis_width(3)
+        .y_axis_min_width(3.0)
         .show(ui, |plot_ui| plot_ui.bar_chart(chart))
         .response
 }

@@ -82,7 +82,7 @@ impl eframe::App for SortApp {
                     "Source code."
                 ));
 
-                egui::widgets::global_dark_light_mode_buttons(ui);
+                egui::widgets::global_theme_preference_buttons(ui);
                 ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
                     powered_by_egui_and_eframe(ui);
                     egui::warn_if_debug_build(ui);

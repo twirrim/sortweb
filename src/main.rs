@@ -20,7 +20,7 @@ fn main() -> eframe::Result<()> {
     eframe::run_native(
         "Sort Visualiser",
         native_options,
-        Box::new(|cc| Box::new(sort_visualiser::SortApp::new(cc))),
+        Box::new(|cc| Ok(Box::new(sort_visualiser::SortApp::new(cc)))),
     )
 }
 
