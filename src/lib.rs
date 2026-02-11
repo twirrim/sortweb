@@ -16,8 +16,7 @@ pub use shell::ShellSort;
 use ecolor::Color32;
 use egui::{Response, Ui};
 use egui_plot::{Bar, BarChart, Plot};
-use rand::seq::SliceRandom;
-use rand::thread_rng;
+use rand::prelude::*;
 
 // from https://www.reddit.com/r/rust/comments/skmpnr/output_text_to_console_in_debug_mode_only/hvluai2/
 // This gets us a print statement that is only compiled to code if compiled in debug mode
@@ -45,7 +44,7 @@ pub fn distance_to_optimal(data: &Data) -> f64 {
 
 pub fn make_bar_vec(size: u16) -> Data {
     // Produce a randomly shuffled vector of numbers first
-    let mut rng = thread_rng();
+    let mut rng = rand::rng();
     let mut numbers: Vec<u16> = (0..size).collect();
     numbers.shuffle(&mut rng);
 
