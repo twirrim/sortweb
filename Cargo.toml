@@ -24,7 +24,7 @@ log = "0.4"
 serde = { version = "1", features = ["derive"] }
 egui_plot = "0.29"
 rand = "0.8"
-getrandom = { version = "0.2", features = ["js"] }
+getrandom = { version = "0.4", features = ["wasm_js"] }
 ecolor = "0.29"
 egui_extras = "0.29"
 
