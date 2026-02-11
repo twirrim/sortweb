@@ -26,7 +26,7 @@ macro_rules! debug_println {
 }
 
 pub fn plot_chart(ui: &mut Ui, name: &str, data: &Data) -> Response {
-    let chart = BarChart::new(data.0.to_owned()).name(name);
+    let chart = BarChart::new(name, data.0.to_owned());
     Plot::new(name)
         .clamp_grid(true)
         .y_axis_min_width(3.0)
